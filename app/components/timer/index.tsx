@@ -109,15 +109,16 @@ const PomodoroTimer = () => {
         }, 300);
     };
 
-    const handleImageUpload = (event: any) => {
-        const file = event.target.files[0];
+    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.length ? event.target.files[0] : null;
+
         if (file && file.type.substr(0, 6) === 'image/') {
             const reader = new FileReader();
             reader.onloadend = () => {
                 setFadeTransition(true);
 
                 setTimeout(() => {
-                    setBackgroundImages(prev => [...prev, reader.result] as any);
+                    setBackgroundImages(prev => [...prev, reader.result as never]);
                     setShowColorOptions(false);
                     if (backgroundImages.length === 0) {
                         setCurrentImageIndex(0);
@@ -270,8 +271,8 @@ const PomodoroTimer = () => {
                     <div className="flex justify-center gap-2 mb-4">
                         <button
                             onClick={() =>
-                                // @ts-ignore
-                                fileInputRef.current.click()
+                                // @ts-expect-error `fileInputRef` is defined
+                                fileInputRef.current && fileInputRef.current.click()
                             }
                             className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-black py-2 px-4 rounded-full transition duration-200"
                         >
